@@ -1,0 +1,27 @@
+@use "tailwindcss";
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+/* light theme (default) */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #1f2937;
+    /* gray-800 */
+    --primary-color: #285A8D;
+    --secondary-color: #8AC44A;
+    --card-bg: #f9fafb;
+}
+
+/* dark theme */
+.dark {
+    --bg-color: #141a21;
+    --text-color: #e5e7eb;
+    /* gray-200 */
+    --primary-color: #285A8D;
+    --secondary-color: #8AC44A;
+    --card-bg: #1f2937;
+}

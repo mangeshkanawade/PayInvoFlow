@@ -1,0 +1,36 @@
+html .dark-theme {
+    color-scheme: dark;
+
+    /* Corner radius */
+    --mat-sys-corner-small: 7px;
+
+    /* Backgrounds */
+    --mat-sys-background: #141a21;
+    --mat-sys-surface-bright: #1f2937;
+    --mat-sys-surface: #1b222b;
+    --mat-sys-surface-container: #1f2937;
+    --mat-sys-surface-container-low: #1b222b;
+
+    /* Text */
+    --mat-sys-on-background: #e5e7eb;
+    --mat-sys-outline: #3a4755;
+    --mat-sys-outline-variant: #3a4755;
+    --mat-form-field-outlined-hover-outline-color: #3a4755;
+    --mat-checkbox-unselected-hover-state-layer-color: #3a4755;
+    --mat-menu-item-hover-state-layer-color: #2a2e35;
+    --mat-button-toggle-state-layer-color: #2a2e35;
+    --mat-option-focus-state-layer-color: #2a2e35;
+    --mat-option-hover-state-layer-color: #2a2e35;
+    --mat-slide-toggle-unselected-track-color: #2a2e35;
+    --mat-stepper-header-focus-state-layer-color: #2a2e35;
+    --mat-stepper-header-hover-state-layer-color: #2a2e35;
+    --mat-dialog-supporting-text-color: var(--mat-sys-on-background);
+    --mat-expansion-header-hover-state-layer-color: #2a2e35;
+
+    /* Custom colors */
+    --mat-sys-primary: #285A8D;
+    --mat-sys-primary-fixed-dim: rgba(40, 90, 141, 0.15);
+    --mat-sys-secondary: #8AC44A;
+    --mat-sys-secondary-fixed-dim: rgba(138, 196, 74, 0.15);
+    --mat-sys-error: #FF4C4C;
+}
