@@ -1,0 +1,43 @@
+<p-menubar
+  [model]="items"
+  class="fixed top-0 left-0 right-0 z-50 shadow-lg bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg p-4 transition-all duration-300 ease-in-out"
+  [style]="{ 'border-radius': '0 0 1rem 1rem', 'border-bottom': '1px solid rgba(0, 0, 0, 0.1)' }"
+>
+  <!-- Left section (logo) -->
+  <ng-template pTemplate="start">
+    <div class="flex items-center gap-4">
+      <img
+        src="assets/images/logos/payinvoflow-logo.png"
+        alt="PayInvoFlow Logo"
+        class="h-16 w-auto object-contain transition-transform duration-300 hover:scale-105"
+      />
+    </div>
+  </ng-template>
+
+  <!-- Center items -->
+  <ng-template pTemplate="item" let-item>
+    <a
+      [routerLink]="item.routerLink"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="flex items-center gap-3 px-5 py-2 rounded-full text-gray-700 dark:text-gray-200 hover:bg-primary/10 dark:hover:bg-primary/20 transition-all duration-300 ease-in-out"
+    >
+      <i [class]="item.icon" class="text-lg"></i>
+      <span class="font-medium">{{ item.label }}</span>
+    </a>
+  </ng-template>
+
+  <!-- Right section (theme + login) -->
+  <ng-template pTemplate="end">
+    <div class="flex items-center gap-4">
+      <theme-switcher class="transition-transform duration-300 hover:scale-110"></theme-switcher>
+      <button
+        pButton
+        type="button"
+        label="Login"
+        icon="pi pi-user"
+        class="p-button-rounded p-button-sm bg-primary text-white hover:bg-primary-dark shadow-lg transition-all duration-300 ease-in-out"
+      ></button>
+    </div>
+  </ng-template>
+</p-menubar>

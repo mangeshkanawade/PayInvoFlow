@@ -1,0 +1,139 @@
+<p-table
+  #dtClients
+  [value]="clients"
+  dataKey="email"
+  [rows]="10"
+  [paginator]="true"
+  [rowsPerPageOptions]="[2, 5, 10, 25, 50]"
+  [loading]="loading"
+  [tableStyle]="{ 'min-width': '75rem' }"
+  [globalFilterFields]="['name', 'email', 'phone', 'gstin', 'state', 'address', 'status']"
+  responsiveLayout="stack"
+  breakpoints="{'960px': '75vw', '640px': '100vw'}"
+>
+  <!-- Search bar -->
+  <ng-template #caption>
+    <div class="flex justify-end">
+      <p-iconfield iconPosition="left">
+        <p-inputicon>
+          <i class="pi pi-search"></i>
+        </p-inputicon>
+        <input
+          pInputText
+          type="text"
+          (input)="dtClients.filterGlobal($event.target.value, 'contains')"
+          placeholder="Search clients"
+        />
+      </p-iconfield>
+    </div>
+  </ng-template>
+
+  <!-- Header -->
+  <ng-template #header>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>GSTIN</th>
+      <th>State</th>
+      <th>Address</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+  </ng-template>
+
+  <!-- Body -->
+  <ng-template #body let-client>
+    <tr>
+      <td>
+        <div class="flex items-center gap-2">
+          <p-avatar
+            [label]="client.name.charAt(0).toUpperCase()"
+            class="mr-2"
+            size="large"
+            shape="circle"
+            styleClass="bg-green-500 text-white"
+          ></p-avatar>
+          <span>{{ client.name }}</span>
+        </div>
+      </td>
+      <td>{{ client.email }}</td>
+      <td>{{ client.phone }}</td>
+      <td>{{ client.gstin }}</td>
+      <td>{{ client.state }}</td>
+      <td>{{ client.address }}</td>
+      <td>
+        <p-tag [value]="client.status" [severity]="getSeverity(client.status)"></p-tag>
+      </td>
+
+      <td>
+        <!-- Edit button opens popup -->
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="pi pi-pencil"
+          text
+          size="small"
+          (click)="openEditDialog(client)"
+        ></button>
+
+        <!-- Delete button with confirmation -->
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="pi pi-trash"
+          text
+          size="small"
+          (click)="confirmDelete(client)"
+        ></button>
+      </td>
+    </tr>
+  </ng-template>
+
+  <!-- Empty message -->
+  <ng-template #emptymessage>
+    <tr>
+      <td colspan="7">No clients found.</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog
+  header="Edit Client"
+  [(visible)]="displayEditDialog"
+  [modal]="true"
+  [closable]="false"
+  [style]="{ width: '400px' }"
+  [breakpoints]="{ '960px': '75vw', '640px': '100vw' }"
+>
+  <form [formGroup]="editForm" (ngSubmit)="saveClient()">
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="name">Name</label>
+        <input id="name" type="text" pInputText formControlName="name" />
+      </div>
+      <div class="p-field">
+        <label for="email">Email</label>
+        <input id="email" type="email" pInputText formControlName="email" />
+      </div>
+      <div class="p-field">
+        <label for="phone">Phone</label>
+        <input id="phone" type="text" pInputText formControlName="phone" />
+      </div>
+      <div class="flex justify-end gap-2 mt-3">
+        <p-button
+          label="Cancel"
+          icon="pi pi-times"
+          text
+          (onClick)="displayEditDialog = false"
+        ></p-button>
+        <p-button label="Save" icon="pi pi-check" type="submit"></p-button>
+      </div>
+    </div>
+  </form>
+</p-dialog>
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>

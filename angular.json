@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Modernize": {
+    "payinvoflow": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,53 +17,36 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "allowedCommonJsDependencies": [
-              "apexcharts",
-              "bezier-easing",
-              "moment"
-            ],
-            "outputPath": {
-              "base": "dist/Modernize"
-            },
-            "index": "src/index.html",
-            "polyfills": [
-              "zone.js"
-            ],
+            "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
             ],
             "styles": [
-              "src/styles.scss",
-              "src/assets/scss/style.scss"
+              "src/styles.scss"
             ],
-            "scripts": [],
-            "browser": "src/main.ts"
+            "server": "src/main.server.ts",
+            "outputMode": "server",
+            "ssr": {
+              "entry": "src/server.ts"
+            }
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "extractLicenses": true,
-              "sourceMap": false,
-              "namedChunks": false,
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "12mb",
-                  "maximumError": "12mb"
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "12mb",
-                  "maximumError": "12mb"
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
                 }
               ],
               "outputHashing": "all"
@@ -71,53 +54,43 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular/build:dev-server",
           "options": {
             "port": 2000
           },
+          "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Modernize:build:production"
-            },
-            "hmr": {
-              "hmr": true
+              "buildTarget": "payinvoflow:build:production"
             },
             "development": {
-              "buildTarget": "Modernize:build:development"
+              "buildTarget": "payinvoflow:build:development"
             }
           },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular/build:extract-i18n",
-          "options": {
-            "buildTarget": "Modernize:build"
-          }
+          "builder": "@angular/build:extract-i18n"
         },
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
             ],
             "styles": [
               "src/styles.scss"
-            ],
-            "scripts": []
+            ]
           }
         }
       }
@@ -125,31 +98,5 @@
   },
   "cli": {
     "analytics": false
-  },
-  "schematics": {
-    "@schematics/angular:component": {
-      "type": "component"
-    },
-    "@schematics/angular:directive": {
-      "type": "directive"
-    },
-    "@schematics/angular:service": {
-      "type": "service"
-    },
-    "@schematics/angular:guard": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:interceptor": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:module": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:pipe": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:resolver": {
-      "typeSeparator": "."
-    }
   }
 }

@@ -1,0 +1,135 @@
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>
+
+<div *ngIf="loading" class="mb-2">
+  <p-progressbar mode="indeterminate" [style]="{ height: '5px' }" />
+</div>
+
+<p-table
+  #dt
+  [value]="companies"
+  dataKey="id"
+  [rows]="10"
+  [paginator]="true"
+  [rowsPerPageOptions]="[2, 5, 10, 25, 50]"
+  [tableStyle]="{ 'min-width': '75rem' }"
+  [globalFilterFields]="[
+    'name',
+    'email',
+    'phone',
+    'gstin',
+    'state',
+    'bankName',
+    'bankBranch',
+    'status',
+  ]"
+>
+  <!-- Search bar -->
+  <ng-template #caption>
+    <div class="flex justify-end">
+      <p-iconfield iconPosition="left">
+        <p-inputicon>
+          <i class="pi pi-search"></i>
+        </p-inputicon>
+        <input
+          pInputText
+          type="text"
+          (input)="dt.filterGlobal($event.target.value, 'contains')"
+          placeholder="Search companies"
+        />
+      </p-iconfield>
+    </div>
+  </ng-template>
+
+  <!-- Header -->
+  <ng-template #header>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>GSTIN</th>
+      <th>State</th>
+      <th>Bank</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+  </ng-template>
+
+  <!-- Body -->
+  <ng-template #body let-company>
+    <tr>
+      <td>
+        <div class="flex items-center gap-2">
+          @if (company.logo) {
+            <p-avatar
+              [image]="company.logo"
+              class="mr-2"
+              size="large"
+              shape="circle"
+              styleClass="bg-blue-500 text-white"
+            ></p-avatar>
+          } @else {
+            <p-avatar
+              [label]="company.name.charAt(0).toUpperCase()"
+              class="mr-2"
+              size="large"
+              shape="circle"
+              styleClass="bg-blue-500 text-white"
+            ></p-avatar>
+          }
+          <span>{{ company.name }}</span>
+        </div>
+      </td>
+
+      <td>{{ company.email }}</td>
+      <td>{{ company.phone }}</td>
+      <td>{{ company.gstin }}</td>
+      <td>{{ company.state }}</td>
+      <td>{{ company.bankName }} ({{ company.bankBranch }})</td>
+      <td>
+        <p-tag [value]="company.status" [severity]="getSeverity(company.status)"></p-tag>
+      </td>
+      <td>
+        <!-- Edit button opens popup -->
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="pi pi-pencil"
+          text
+          size="small"
+          (click)="editCompany(company)"
+        ></button>
+
+        <!-- Delete button with confirmation -->
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="pi pi-trash"
+          text
+          size="small"
+          (click)="confirmDelete(company)"
+        ></button>
+      </td>
+    </tr>
+  </ng-template>
+
+  <!-- Empty message -->
+  <ng-template #emptymessage>
+    <tr>
+      <td colspan="7" class="text-center p-6">
+        @if (loading) {
+          <div class="flex flex-col items-center gap-3">
+            <span class="text-xl font-semibold mb-6 text-gray-700 p-2">Loading companies...</span>
+          </div>
+        } @else {
+          <div class="flex flex-col items-center gap-2 text-gray-500">
+            <i class="pi pi-building text-2xl"></i>
+            <span class="font-medium">No companies found</span>
+          </div>
+        }
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

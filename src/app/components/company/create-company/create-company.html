@@ -1,0 +1,332 @@
+<p-card>
+  <h1 class="text-2xl font-semibold mb-6 text-gray-700 border-b pb-2">Company Registration Form</h1>
+
+  <form [formGroup]="companyForm" class="space-y-8">
+    <!-- Company Information Section -->
+    <div class="mb-8">
+      <h3 class="text-lg font-semibold mb-6 text-gray-700 border-b pb-2">Company Information</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input
+              pInputText
+              id="name"
+              formControlName="name"
+              class="w-full"
+              [class.ng-invalid]="
+                companyForm.get('name')?.invalid && companyForm.get('name')?.touched
+              "
+            />
+            <label for="name">Company Name *</label>
+          </p-floatlabel>
+          @if (companyForm.get('name')?.touched && companyForm.get('name')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('name')"
+            />
+          }
+        </div>
+
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input
+              pInputText
+              id="email"
+              formControlName="email"
+              type="email"
+              class="w-full"
+              [class.ng-invalid]="
+                companyForm.get('email')?.invalid && companyForm.get('email')?.touched
+              "
+            />
+            <label for="email">Email Address *</label>
+          </p-floatlabel>
+          @if (companyForm.get('email')?.touched && companyForm.get('email')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('email')"
+            />
+          }
+        </div>
+
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input
+              pInputText
+              id="phone"
+              mask="+91-9999999999"
+              formControlName="phone"
+              class="w-full"
+              placeholder="+91-XXXXXXXXXX"
+            />
+            <label for="phone">Phone Number</label>
+          </p-floatlabel>
+
+          @if (companyForm.get('phone')?.touched && companyForm.get('phone')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('phone')"
+            />
+          }
+        </div>
+
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input
+              pInputText
+              id="gstin"
+              formControlName="gstin"
+              class="w-full uppercase"
+              maxlength="15"
+            />
+            <label for="gstin">GSTIN *</label>
+          </p-floatlabel>
+          @if (companyForm.get('gstin')?.touched && companyForm.get('gstin')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('gstin')"
+            />
+          }
+        </div>
+
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <p-select
+              [options]="states"
+              formControlName="state"
+              optionLabel="name"
+              optionValue="value"
+              inputId="state"
+              class="w-full"
+              [showClear]="true"
+            />
+            <label for="state">State *</label>
+          </p-floatlabel>
+          @if (companyForm.get('state')?.touched && companyForm.get('state')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('state')"
+            />
+          }
+        </div>
+
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <p-select
+              [options]="statues"
+              formControlName="status"
+              optionLabel="name"
+              optionValue="code"
+              inputId="status"
+              class="w-full"
+              [showClear]="true"
+            />
+            <label for="status">Status *</label>
+          </p-floatlabel>
+          @if (companyForm.get('status')?.touched && companyForm.get('status')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('status')"
+            />
+          }
+        </div>
+
+        <div class="md:col-span-2 space-y-2">
+          <p-floatlabel variant="in">
+            <textarea
+              pInputTextarea
+              id="address"
+              formControlName="address"
+              rows="3"
+              class="w-full resize-none"
+              [autoResize]="true"
+            ></textarea>
+            <label for="address">Complete Address *</label>
+          </p-floatlabel>
+
+          @if (companyForm.get('address')?.touched && companyForm.get('address')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('address')"
+            />
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Bank Details Section -->
+    <div class="mb-8">
+      <h3 class="text-lg font-semibold mb-6 text-gray-700 border-b pb-2">Banking Information</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input pInputText id="bankName" formControlName="bankName" class="w-full" />
+            <label for="bankName">Bank Name *</label>
+          </p-floatlabel>
+
+          @if (companyForm.get('bankName')?.touched && companyForm.get('bankName')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('bankName')"
+            />
+          }
+        </div>
+
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input pInputText id="bankBranch" formControlName="bankBranch" class="w-full" />
+            <label for="bankBranch">Branch Name *</label>
+          </p-floatlabel>
+
+          @if (companyForm.get('bankBranch')?.touched && companyForm.get('bankBranch')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('bankBranch')"
+            />
+          }
+        </div>
+
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input
+              pInputText
+              id="accountNumber"
+              formControlName="accountNumber"
+              class="w-full"
+              type="number"
+            />
+            <label for="accountNumber">Account Number *</label>
+          </p-floatlabel>
+
+          @if (
+            companyForm.get('accountNumber')?.touched && companyForm.get('accountNumber')?.errors
+          ) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('accountNumber')"
+            />
+          }
+        </div>
+
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input
+              pInputText
+              id="ifscCode"
+              formControlName="ifscCode"
+              class="w-full uppercase"
+              maxlength="11"
+            />
+            <label for="ifscCode">IFSC Code *</label>
+          </p-floatlabel>
+
+          @if (companyForm.get('ifscCode')?.touched && companyForm.get('ifscCode')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('ifscCode')"
+            />
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Logo Upload Section -->
+    <div class="mb-8">
+      <h3 class="text-lg font-semibold mb-6 text-gray-700 border-b pb-2">Company Logo</h3>
+      <div class="space-y-4">
+        <!-- File Upload Area -->
+        <div class="flex flex-col md:flex-row items-start gap-6">
+          <div class="flex-1">
+            <p-fileupload
+              mode="basic"
+              name="logo"
+              accept="image/*"
+              [maxFileSize]="1000000"
+              chooseLabel="Choose Logo"
+              chooseIcon="pi pi-upload"
+              [auto]="false"
+              (onSelect)="onLogoSelect($event)"
+              class="w-full"
+            />
+            <small class="text-gray-500 mt-2 block">
+              Supported formats: PNG, JPG, JPEG (Max size: 1MB)
+            </small>
+          </div>
+
+          <!-- Logo Preview -->
+          <div class="flex-shrink-0" *ngIf="selectedLogoFile">
+            <div class="border-2 border-dashed border-gray-200 rounded-lg p-4 bg-gray-50">
+              <img
+                [src]="selectedLogoFile"
+                alt="Company Logo Preview"
+                class="h-20 w-20 object-contain rounded-lg border bg-white"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="flex flex-row justify-between items-center gap-4 pt-6 border-t">
+      <p-button
+        type="button"
+        label="Reset Form"
+        icon="pi pi-refresh"
+        severity="secondary"
+        class="w-full md:w-auto"
+        [outlined]="true"
+        (click)="resetForm()"
+      />
+
+      <p-button
+        (click)="onSubmit()"
+        class="w-full md:w-auto flex items-center justify-center gap-2"
+        [disabled]="companyForm.invalid || isSubmitting"
+      >
+        <ng-container *ngIf="!isSubmitting; else loadingTpl">
+          <i class="pi pi-save"></i>
+          <span>Save Company</span>
+        </ng-container>
+
+        <ng-template #loadingTpl>
+          <i class="pi pi-spin pi-spinner"></i>
+          <span>Saving...</span>
+        </ng-template>
+      </p-button>
+    </div>
+  </form>
+</p-card>
