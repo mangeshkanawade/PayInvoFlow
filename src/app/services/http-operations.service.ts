@@ -1,9 +1,4 @@
-import {
-  HttpClient,
-  HttpEvent,
-  HttpHeaders,
-  HttpRequest,
-} from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
@@ -23,7 +18,7 @@ export class HttpOperationsService {
 
     httpOptions = { headers: headers };
 
-    return this.http.get(this.baseUrl + url + '?t=' + new Date().getTime(), {
+    return this.http.get(this.baseUrl + url, {
       ...httpOptions,
     });
   }
@@ -48,7 +43,7 @@ export class HttpOperationsService {
         headers: headers,
         reportProgress: true,
         responseType: 'blob',
-      })
+      }),
     );
   }
 
@@ -59,7 +54,7 @@ export class HttpOperationsService {
       new HttpRequest('GET', this.baseUrl + url, null, {
         reportProgress: true,
         responseType: 'blob' as 'json',
-      })
+      }),
     );
   }
 

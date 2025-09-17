@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { CreateClient } from './components/client/create-client/create-client';
 import { SearchClient } from './components/client/search-client/search-client';
 import { CreateCompany } from './components/company/create-company/create-company';
 import { SearchCompany } from './components/company/search-company/search-company';
@@ -46,7 +47,12 @@ export const routes: Routes = [
       },
       {
         path: 'form',
-        component: CreateCompany,
+        component: CreateClient,
+        title: 'Client Form',
+      },
+      {
+        path: 'form/:id',
+        component: CreateClient,
         title: 'Client Form',
       },
     ],

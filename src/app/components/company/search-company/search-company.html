@@ -1,9 +1,11 @@
 <!-- Confirmation Dialog -->
 <p-confirmDialog></p-confirmDialog>
 
-<div *ngIf="loading" class="mb-2">
-  <p-progressbar mode="indeterminate" [style]="{ height: '5px' }" />
-</div>
+@if (loading) {
+  <div class="mb-2">
+    <p-progressbar mode="indeterminate" [style]="{ height: '5px' }" />
+  </div>
+}
 
 <p-table
   #dt
@@ -12,7 +14,8 @@
   [rows]="10"
   [paginator]="true"
   [rowsPerPageOptions]="[2, 5, 10, 25, 50]"
-  [tableStyle]="{ 'min-width': '75rem' }"
+  class="w-full"
+  [responsiveLayout]="'scroll'"
   [globalFilterFields]="[
     'name',
     'email',
@@ -26,8 +29,8 @@
 >
   <!-- Search bar -->
   <ng-template #caption>
-    <div class="flex justify-end">
-      <p-iconfield iconPosition="left">
+    <div class="flex justify-end p-0">
+      <p-iconfield class="md:w-1/4 w-full" iconPosition="left">
         <p-inputicon>
           <i class="pi pi-search"></i>
         </p-inputicon>
@@ -36,6 +39,8 @@
           type="text"
           (input)="dt.filterGlobal($event.target.value, 'contains')"
           placeholder="Search companies"
+          pSize="large"
+          class="w-full"
         />
       </p-iconfield>
     </div>
@@ -43,7 +48,8 @@
 
   <!-- Header -->
   <ng-template #header>
-    <tr>
+    <!-- Desktop header -->
+    <tr class="hidden sm:table-row">
       <th>Name</th>
       <th>Email</th>
       <th>Phone</th>
@@ -51,13 +57,20 @@
       <th>State</th>
       <th>Bank</th>
       <th>Status</th>
-      <th></th>
+      <th>Action</th>
+    </tr>
+
+    <!-- Mobile header -->
+    <tr class="sm:hidden">
+      <th class="w-3/4">Company Info</th>
+      <th class="w-1/4">Status & Actions</th>
     </tr>
   </ng-template>
 
   <!-- Body -->
   <ng-template #body let-company>
-    <tr>
+    <!-- Desktop row -->
+    <tr class="hidden sm:table-row">
       <td>
         <div class="flex items-center gap-2">
           @if (company.logo) {
@@ -80,7 +93,6 @@
           <span>{{ company.name }}</span>
         </div>
       </td>
-
       <td>{{ company.email }}</td>
       <td>{{ company.phone }}</td>
       <td>{{ company.gstin }}</td>
@@ -90,7 +102,6 @@
         <p-tag [value]="company.status" [severity]="getSeverity(company.status)"></p-tag>
       </td>
       <td>
-        <!-- Edit button opens popup -->
         <button
           pButton
           pRipple
@@ -100,8 +111,6 @@
           size="small"
           (click)="editCompany(company)"
         ></button>
-
-        <!-- Delete button with confirmation -->
         <button
           pButton
           pRipple
@@ -111,6 +120,44 @@
           size="small"
           (click)="confirmDelete(company)"
         ></button>
+      </td>
+    </tr>
+
+    <!-- Mobile row -->
+    <tr class="sm:hidden">
+      <td>
+        <div class="font-semibold">{{ company.name }}</div>
+        <div class="text-gray-600">{{ company.email }}</div>
+        <div class="text-gray-600">{{ company.phone }}</div>
+        <div class="text-gray-600">{{ company.state }}</div>
+        <div class="text-gray-600">{{ company.bankName }} ({{ company.bankBranch }})</div>
+      </td>
+      <td>
+        <div class="flex items-center gap-2">
+          <p-tag
+            [value]="company.status"
+            class="text-xs"
+            [severity]="getSeverity(company.status)"
+          ></p-tag>
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="pi pi-pencil"
+            text
+            size="small"
+            (click)="editCompany(company)"
+          ></button>
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="pi pi-trash"
+            text
+            size="small"
+            (click)="confirmDelete(company)"
+          ></button>
+        </div>
       </td>
     </tr>
   </ng-template>

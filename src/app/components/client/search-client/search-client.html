@@ -1,20 +1,27 @@
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>
+
+@if (loading) {
+  <div class="mb-2">
+    <p-progressbar mode="indeterminate" [style]="{ height: '5px' }" />
+  </div>
+}
+
 <p-table
   #dtClients
   [value]="clients"
-  dataKey="email"
+  dataKey="id"
   [rows]="10"
   [paginator]="true"
   [rowsPerPageOptions]="[2, 5, 10, 25, 50]"
-  [loading]="loading"
-  [tableStyle]="{ 'min-width': '75rem' }"
+  class="w-full"
+  [responsiveLayout]="'scroll'"
   [globalFilterFields]="['name', 'email', 'phone', 'gstin', 'state', 'address', 'status']"
-  responsiveLayout="stack"
-  breakpoints="{'960px': '75vw', '640px': '100vw'}"
 >
   <!-- Search bar -->
   <ng-template #caption>
-    <div class="flex justify-end">
-      <p-iconfield iconPosition="left">
+    <div class="flex justify-end p-0">
+      <p-iconfield class="md:w-1/4 w-full flex items-center gap-2" iconPosition="left">
         <p-inputicon>
           <i class="pi pi-search"></i>
         </p-inputicon>
@@ -23,6 +30,8 @@
           type="text"
           (input)="dtClients.filterGlobal($event.target.value, 'contains')"
           placeholder="Search clients"
+          pSize="large"
+          class="w-full"
         />
       </p-iconfield>
     </div>
@@ -30,7 +39,8 @@
 
   <!-- Header -->
   <ng-template #header>
-    <tr>
+    <!-- Desktop header -->
+    <tr class="hidden sm:table-row">
       <th>Name</th>
       <th>Email</th>
       <th>Phone</th>
@@ -40,11 +50,18 @@
       <th>Status</th>
       <th></th>
     </tr>
+
+    <!-- Mobile header -->
+    <tr class="sm:hidden">
+      <th class="w-3/4">Client Info</th>
+      <th class="w-1/4">Status & Actions</th>
+    </tr>
   </ng-template>
 
   <!-- Body -->
   <ng-template #body let-client>
-    <tr>
+    <!-- Desktop row -->
+    <tr class="hidden sm:table-row">
       <td>
         <div class="flex items-center gap-2">
           <p-avatar
@@ -75,7 +92,7 @@
           icon="pi pi-pencil"
           text
           size="small"
-          (click)="openEditDialog(client)"
+          (click)="editClient(client)"
         ></button>
 
         <!-- Delete button with confirmation -->
@@ -90,6 +107,44 @@
         ></button>
       </td>
     </tr>
+
+    <!-- Mobile row -->
+    <tr class="sm:hidden">
+      <td>
+        <div class="font-semibold">{{ client.name }}</div>
+        <div class="text-gray-600">{{ client.email }}</div>
+        <div class="text-gray-600">{{ client.phone }}</div>
+        <div class="text-gray-600">{{ client.state }}</div>
+        <div class="text-gray-600">{{ client.address }}</div>
+      </td>
+      <td>
+        <div class="flex items-center gap-2">
+          <p-tag
+            [value]="client.status"
+            class="text-xs"
+            [severity]="getSeverity(client.status)"
+          ></p-tag>
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="pi pi-pencil"
+            text
+            size="small"
+            (click)="editClient(client)"
+          ></button>
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="pi pi-trash"
+            text
+            size="small"
+            (click)="confirmDelete(client)"
+          ></button>
+        </div>
+      </td>
+    </tr>
   </ng-template>
 
   <!-- Empty message -->
@@ -99,41 +154,3 @@
     </tr>
   </ng-template>
 </p-table>
-
-<p-dialog
-  header="Edit Client"
-  [(visible)]="displayEditDialog"
-  [modal]="true"
-  [closable]="false"
-  [style]="{ width: '400px' }"
-  [breakpoints]="{ '960px': '75vw', '640px': '100vw' }"
->
-  <form [formGroup]="editForm" (ngSubmit)="saveClient()">
-    <div class="p-fluid">
-      <div class="p-field">
-        <label for="name">Name</label>
-        <input id="name" type="text" pInputText formControlName="name" />
-      </div>
-      <div class="p-field">
-        <label for="email">Email</label>
-        <input id="email" type="email" pInputText formControlName="email" />
-      </div>
-      <div class="p-field">
-        <label for="phone">Phone</label>
-        <input id="phone" type="text" pInputText formControlName="phone" />
-      </div>
-      <div class="flex justify-end gap-2 mt-3">
-        <p-button
-          label="Cancel"
-          icon="pi pi-times"
-          text
-          (onClick)="displayEditDialog = false"
-        ></p-button>
-        <p-button label="Save" icon="pi pi-check" type="submit"></p-button>
-      </div>
-    </div>
-  </form>
-</p-dialog>
-
-<!-- Confirmation Dialog -->
-<p-confirmDialog></p-confirmDialog>

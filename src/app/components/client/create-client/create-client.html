@@ -1,1 +1,188 @@
-<p>create-client works!</p>
+<p-card>
+  <h1 class="text-2xl font-semibold mb-6 text-gray-700 border-b pb-2">Client Registration Form</h1>
+
+  <form [formGroup]="clientForm" class="space-y-8">
+    <!-- Client Information -->
+    <div class="mb-8">
+      <h3 class="text-lg font-semibold mb-6 text-gray-700 border-b pb-2">Client Information</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Name -->
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input pInputText id="name" formControlName="name" class="w-full" />
+            <label for="name">Client Name *</label>
+          </p-floatlabel>
+          @if (clientForm.get('name')?.touched && clientForm.get('name')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('name')"
+            />
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input pInputText id="email" formControlName="email" type="email" class="w-full" />
+            <label for="email">Email Address *</label>
+          </p-floatlabel>
+          @if (clientForm.get('email')?.touched && clientForm.get('email')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('email')"
+            />
+          }
+        </div>
+
+        <!-- Phone -->
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input
+              pInputText
+              id="phone"
+              formControlName="phone"
+              class="w-full"
+              placeholder="9999999999"
+            />
+            <label for="phone">Phone Number *</label>
+          </p-floatlabel>
+          @if (clientForm.get('phone')?.touched && clientForm.get('phone')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('phone')"
+            />
+          }
+        </div>
+
+        <!-- GSTIN -->
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input
+              pInputText
+              id="gstin"
+              formControlName="gstin"
+              maxlength="15"
+              class="w-full uppercase"
+            />
+            <label for="gstin">GSTIN *</label>
+          </p-floatlabel>
+          @if (clientForm.get('gstin')?.touched && clientForm.get('gstin')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('gstin')"
+            />
+          }
+        </div>
+
+        <!-- State -->
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <p-select
+              [options]="states"
+              formControlName="state"
+              optionLabel="name"
+              optionValue="value"
+              class="w-full"
+            />
+            <label for="state">State *</label>
+          </p-floatlabel>
+          @if (clientForm.get('state')?.touched && clientForm.get('state')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('state')"
+            />
+          }
+        </div>
+
+        <!-- Status -->
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <p-select
+              [options]="statues"
+              formControlName="status"
+              optionLabel="name"
+              optionValue="code"
+              class="w-full"
+            />
+            <label for="status">Status *</label>
+          </p-floatlabel>
+          @if (clientForm.get('status')?.touched && clientForm.get('status')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('status')"
+            />
+          }
+        </div>
+
+        <!-- Address -->
+        <div class="md:col-span-2 space-y-2">
+          <p-floatlabel variant="in">
+            <textarea
+              pInputTextarea
+              id="address"
+              formControlName="address"
+              rows="3"
+              class="w-full resize-none"
+              [autoResize]="true"
+            ></textarea>
+            <label for="address">Address *</label>
+          </p-floatlabel>
+          @if (clientForm.get('address')?.touched && clientForm.get('address')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('address')"
+            />
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-row justify-between items-center gap-4 pt-6 border-t">
+      <p-button
+        type="button"
+        label="Reset Form"
+        icon="pi pi-refresh"
+        severity="secondary"
+        class="w-full md:w-auto"
+        [outlined]="true"
+        (click)="resetForm()"
+      />
+
+      <p-button
+        (click)="onSubmit()"
+        class="w-full md:w-auto flex items-center justify-center gap-2"
+        [disabled]="clientForm.invalid || isSubmitting"
+      >
+        @if (!isSubmitting) {
+          <i class="pi pi-save"></i>
+          <span>Save Company</span>
+        } @else {
+          <i class="pi pi-spin pi-spinner"></i>
+          <span>Saving...</span>
+        }
+      </p-button>
+    </div>
+  </form>
+</p-card>

@@ -1,4 +1,4 @@
-export interface Company {
+export interface Client {
   _id: string;
   name: string;
   address: string;
@@ -7,10 +7,5 @@ export interface Company {
   gstin: string;
   state: string;
   stateCode: string;
-  bankName: string;
-  bankBranch: string;
-  accountNumber: string;
-  ifscCode: string;
-  logo: string;
   status: 'Active' | 'Inactive';
 }

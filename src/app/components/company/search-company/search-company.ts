@@ -7,25 +7,9 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Company } from '../../../models/company.model';
 import { SharedModule } from '../../../modules/shared.module';
 import { CompanyService } from './../../../services/company.service';
-
-interface Company {
-  _id: string;
-  name: string;
-  address: string;
-  email: string;
-  phone: string;
-  gstin: string;
-  state: string;
-  stateCode: string;
-  bankName: string;
-  bankBranch: string;
-  accountNumber: string;
-  ifscCode: string;
-  logo: string;
-  status: string;
-}
 
 @Component({
   selector: 'app-search-company',
