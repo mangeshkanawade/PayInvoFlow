@@ -10,10 +10,10 @@ export interface ThemeState {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="p-2 flex justify-end">
+    <div class="p-2 rounded-full flex justify-end">
       <button
         type="button"
-        class="inline-flex w-10 h-10 items-center justify-center rounded border"
+        class="inline-flex rounded-full w-10 h-10 items-center justify-center border"
         (click)="toggleTheme()"
       >
         <i [ngClass]="'pi ' + iconClass()" class="text-lg"></i>

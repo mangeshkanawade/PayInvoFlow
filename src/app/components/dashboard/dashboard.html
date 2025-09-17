@@ -1,0 +1,148 @@
+<div class="w-full bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+    <p-card
+      class="shadow-xl bg-white dark:bg-gray-800 rounded-xl transition-transform hover:scale-105"
+    >
+      <div class="flex items-center p-4">
+        <i class="pi pi-users text-4xl text-blue-600 dark:text-blue-400 mr-4"></i>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Total Clients</h3>
+          <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">
+            {{ summary.totalClients }}
+          </p>
+        </div>
+      </div>
+    </p-card>
+    <p-card
+      class="shadow-xl bg-white dark:bg-gray-800 rounded-xl transition-transform hover:scale-105"
+    >
+      <div class="flex items-center p-4">
+        <i class="pi pi-file text-4xl text-green-600 dark:text-green-400 mr-4"></i>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Total Invoices</h3>
+          <p class="text-3xl font-bold text-green-600 dark:text-green-400">
+            {{ summary.totalInvoices }}
+          </p>
+        </div>
+      </div>
+    </p-card>
+    <p-card
+      class="shadow-xl bg-white dark:bg-gray-800 rounded-xl transition-transform hover:scale-105"
+    >
+      <div class="flex items-center p-4">
+        <i class="pi pi-dollar text-4xl text-yellow-600 dark:text-yellow-400 mr-4"></i>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Total Revenue</h3>
+          <p class="text-3xl font-bold text-yellow-600 dark:text-yellow-400">
+            ₹{{ summary.totalRevenue | number }}
+          </p>
+        </div>
+      </div>
+    </p-card>
+    <p-card
+      class="shadow-xl bg-white dark:bg-gray-800 rounded-xl transition-transform hover:scale-105"
+    >
+      <div class="flex items-center p-4">
+        <i class="pi pi-check-circle text-4xl text-purple-600 dark:text-purple-400 mr-4"></i>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Paid Invoices</h3>
+          <p class="text-3xl font-bold text-purple-600 dark:text-purple-400">
+            {{ summary.paidInvoices }}
+          </p>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card
+      class="shadow-xl bg-white dark:bg-gray-800 rounded-xl transition-transform hover:scale-105"
+    >
+      <div class="flex items-center p-4">
+        <i class="pi pi-check-circle text-4xl text-purple-600 dark:text-purple-400 mr-4"></i>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Overdue Invoices</h3>
+          <p class="text-3xl font-bold text-purple-600 dark:text-purple-400">
+            {{ summary.overdueInvoices }}
+            <span class="text-lg text-gray-600 dark:text-gray-300">
+              Total: ₹{{ summary.overdueAmount | number }}
+            </span>
+          </p>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Monthly Revenue and Invoice Status Trend -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Monthly Revenue Line Chart -->
+    <p-card class="shadow-xl bg-white dark:bg-gray-800 rounded-xl p-4">
+      <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
+        Monthly Revenue Trend
+      </h3>
+      <p-chart type="line" [data]="monthlyRevenueChartData" [options]="chartOptions"></p-chart>
+    </p-card>
+
+    <!-- Invoice Status Trend Line Chart -->
+    <p-card class="shadow-xl bg-matrix-50 dark:bg-gray-800 rounded-xl p-4">
+      <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
+        Invoice Status Trend
+      </h3>
+      <p-chart type="line" [data]="invoiceStatusTrendChartData" [options]="chartOptions"></p-chart>
+    </p-card>
+  </div>
+
+  <!-- Tables Section -->
+  <div class="grid grid-cols-1 gap-6">
+    <!-- Recent Invoices Table -->
+    <p-card class="shadow-xl bg-white dark:bg-gray-800 rounded-xl p-4">
+      <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Recent Invoices</h3>
+      <p-table [value]="recentInvoices" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="text-gray-800 dark:text-gray-100">Invoice Number</th>
+            <th class="text-gray-800 dark:text-gray-100">Client</th>
+            <th class="text-gray-800 dark:text-gray-100">Date</th>
+            <th class="text-gray-800 dark:text-gray-100">Amount</th>
+            <th class="text-gray-800 dark:text-gray-100">Status</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-invoice>
+          <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
+            <td>{{ invoice.invoiceNumber }}</td>
+            <td>{{ invoice.client }}</td>
+            <td>{{ invoice.invoiceDate | date: 'shortDate' }}</td>
+            <td>₹{{ invoiceAmountMap[invoice.invoiceNumber].grandTotal | number }}</td>
+            <td>
+              <span [class]="getStatusClass(invoice.status)">{{ invoice.status }}</span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+
+    <!-- Top Clients by Invoice Value -->
+    <p-card class="shadow-xl bg-white dark:bg-gray-800 rounded-xl p-4">
+      <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
+        Top Clients by Invoice Value
+      </h3>
+      <p-table [value]="topClients" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="text-gray-800 dark:text-gray-100">Client Name</th>
+            <th class="text-gray-800 dark:text-gray-100">Total Invoices</th>
+            <th class="text-gray-800 dark:text-gray-100">Total Amount</th>
+            <th class="text-gray-800 dark:text-gray-100">State</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-client>
+          <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
+            <td>{{ client.name }}</td>
+            <td>{{ client.totalInvoices }}</td>
+            <td>₹{{ client.totalAmount | number }}</td>
+            <td>{{ client.state }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>

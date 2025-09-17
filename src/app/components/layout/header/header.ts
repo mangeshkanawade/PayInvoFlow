@@ -27,8 +27,8 @@ export class Header {
         label: 'Comapny',
         icon: 'pi pi-briefcase',
         items: [
-          { label: 'Search', icon: 'pi pi-code', routerLink: '/company/search' },
-          { label: 'Create', icon: 'pi pi-mobile', routerLink: '/company/form' },
+          { label: 'Search', icon: 'pi pi-search', routerLink: '/company/search' },
+          { label: 'Create', icon: 'pi pi-plus', routerLink: '/company/form' },
         ],
       },
 

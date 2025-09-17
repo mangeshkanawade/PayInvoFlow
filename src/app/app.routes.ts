@@ -7,6 +7,15 @@ import { NotFound } from './components/notfound/not-found';
 
 export const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full',
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./components/dashboard/dashboard').then((m) => m.Dashboard),
+  },
+  {
     path: 'company',
     children: [
       {
