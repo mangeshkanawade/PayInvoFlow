@@ -11,9 +11,18 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server,
   },
 
+  {
+    path: 'notfound',
+    renderMode: RenderMode.Server,
+    status: 400,
+    headers: {
+      'Cache-Control': 'no-cache',
+    },
+  },
+
   // Catch-all -> prerender
   {
     path: '**',
-    renderMode: RenderMode.Prerender,
+    renderMode: RenderMode.Client,
   },
 ];
