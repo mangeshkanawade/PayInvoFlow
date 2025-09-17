@@ -4,9 +4,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "build": "ng build --configuration production",
+    "postbuild": "copyfiles -u 1 api/index.js dist/payinvoflow/api",
+    "vercel-build": "npm run build",
+    "deploy": "npm run build && vercel --prod",
     "serve:ssr:payinvoflow": "node dist/payinvoflow/server/server.mjs"
   },
   "prettier": {
@@ -58,8 +61,10 @@
     "@types/express": "^5.0.1",
     "@types/jasmine": "~4.3.1",
     "@types/node": "^22.9.0",
+    "@vercel/node": "^5.3.22",
     "autoprefixer": "^10.4.20",
     "codelyzer": "^0.0.28",
+    "copyfiles": "^2.4.1",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.2",
     "karma-chrome-launcher": "~3.2.0",
