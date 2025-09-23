@@ -19,11 +19,6 @@ export class Header {
         routerLink: '/',
       },
       {
-        label: 'About',
-        icon: 'pi pi-info-circle',
-        routerLink: '/about',
-      },
-      {
         label: 'Comapny',
         icon: 'pi pi-briefcase',
         items: [
@@ -40,10 +35,24 @@ export class Header {
           { label: 'Create', icon: 'pi pi-plus', routerLink: '/client/form' },
         ],
       },
+
+      {
+        label: 'Invoice',
+        icon: 'pi pi-envelope',
+        items: [
+          { label: 'Search', icon: 'pi pi-search', routerLink: '/invoice/search' },
+          { label: 'Create', icon: 'pi pi-plus', routerLink: '/invoice/form' },
+        ],
+      },
       {
         label: 'Contact',
         icon: 'pi pi-envelope',
         routerLink: '/contact',
+      },
+      {
+        label: 'About',
+        icon: 'pi pi-info-circle',
+        routerLink: '/about',
       },
     ];
   }

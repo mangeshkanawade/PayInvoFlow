@@ -172,7 +172,7 @@ export class CreateClient implements OnInit {
         case 'phone':
           return 'Enter valid 10-digit phone number';
         case 'gstin':
-          return 'Enter valid 15-character GSTIN';
+          return 'Enter valid 15-character GSTIN (e.g., 27AAAPA1234A1Z5)';
         case 'stateCode':
           return 'Enter 2-digit numeric state code';
         case 'accountNumber':

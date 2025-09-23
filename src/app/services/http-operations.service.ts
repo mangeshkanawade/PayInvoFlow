@@ -47,15 +47,8 @@ export class HttpOperationsService {
     );
   }
 
-  getDownloadFileAPI(url: string): Observable<HttpEvent<Blob>> {
-    let headers = this.GetHeader();
-
-    return this.http.request(
-      new HttpRequest('GET', this.baseUrl + url, null, {
-        reportProgress: true,
-        responseType: 'blob' as 'json',
-      }),
-    );
+  getDownloadFileAPI(url: string): Observable<Blob> {
+    return this.http.get(this.baseUrl + url, { responseType: 'blob' });
   }
 
   UploadFile(url: string, formData: any) {

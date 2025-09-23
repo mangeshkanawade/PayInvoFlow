@@ -175,6 +175,82 @@
       </div>
     </div>
 
+    <!-- Invoice Details Section -->
+    <div class="mb-8">
+      <h3 class="text-lg font-semibold mb-6 text-gray-700 border-b pb-2">Invoice Information</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input
+              pInputText
+              id="Invoice Prefix"
+              formControlName="invoicePrefix"
+              class="w-full uppercase"
+              maxlength="15"
+            />
+            <label for="gstin">Invoice Prefix *</label>
+          </p-floatlabel>
+          @if (
+            companyForm.get('invoicePrefix')?.touched && companyForm.get('invoicePrefix')?.errors
+          ) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('invoicePrefix')"
+            />
+          }
+        </div>
+
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input
+              pInputText
+              id="sgstRate"
+              formControlName="sgstRate"
+              type="number"
+              class="w-full"
+            />
+            <label for="sgstRate">SGST Rate *</label>
+          </p-floatlabel>
+
+          @if (companyForm.get('sgstRate')?.touched && companyForm.get('sgstRate')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('sgstRate')"
+            />
+          }
+        </div>
+
+        <div class="space-y-2">
+          <p-floatlabel variant="in">
+            <input
+              pInputText
+              id="cgstRate"
+              formControlName="cgstRate"
+              class="w-full"
+              type="number"
+            />
+            <label for="cgstRate">CGST Rate *</label>
+          </p-floatlabel>
+
+          @if (companyForm.get('cgstRate')?.touched && companyForm.get('cgstRate')?.errors) {
+            <p-message
+              severity="error"
+              variant="simple"
+              size="small"
+              class="text-sm text-red-500"
+              [text]="getErrorMessage('cgstRate')"
+            />
+          }
+        </div>
+      </div>
+    </div>
+
     <!-- Bank Details Section -->
     <div class="mb-8">
       <h3 class="text-lg font-semibold mb-6 text-gray-700 border-b pb-2">Banking Information</h3>

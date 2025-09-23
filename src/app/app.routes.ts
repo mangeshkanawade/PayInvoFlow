@@ -3,6 +3,7 @@ import { CreateClient } from './components/client/create-client/create-client';
 import { SearchClient } from './components/client/search-client/search-client';
 import { CreateCompany } from './components/company/create-company/create-company';
 import { SearchCompany } from './components/company/search-company/search-company';
+import { CreateInvoice } from './components/invoice/create-invoice/create-invoice';
 import { NotFound } from './components/notfound/not-found';
 
 export const routes: Routes = [
@@ -63,6 +64,32 @@ export const routes: Routes = [
         path: 'form/:id',
         component: CreateClient,
         title: 'Client Form',
+      },
+    ],
+  },
+
+  {
+    path: 'invoice',
+    children: [
+      {
+        path: '',
+        redirectTo: 'search',
+        pathMatch: 'full',
+      },
+      {
+        path: 'search',
+        component: SearchCompany,
+        title: 'Invoice',
+      },
+      {
+        path: 'form',
+        component: CreateInvoice,
+        title: 'Invoice Form',
+      },
+      {
+        path: 'form/:id',
+        component: CreateInvoice,
+        title: 'Invoice Form',
       },
     ],
   },
