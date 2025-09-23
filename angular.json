@@ -22,7 +22,8 @@
             "inlineStyleLanguage": "scss",
             "allowedCommonJsDependencies": [
               "quill",
-              "quill-delta"
+              "quill-delta",
+              "to-words"
             ],
             "assets": [
               {
