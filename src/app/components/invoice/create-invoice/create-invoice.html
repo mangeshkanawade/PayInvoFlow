@@ -123,6 +123,7 @@
       </ng-template>
 
       <ng-template pTemplate="body" let-item let-ri="rowIndex">
+        <!-- {{ item | json }} -->
         <tr>
           <!-- Date -->
           <td data-label="Date" class="w-28">
@@ -166,7 +167,7 @@
                 pInputText
                 placeholder="Vehicle No"
                 [(ngModel)]="item.vehicleNo"
-                class="w-full md:w-auto"
+                class="w-full md:w-auto uppercase"
               />
             </ng-container>
             <ng-template #vehicleView>
