@@ -7,9 +7,13 @@
         <label class="block text-base font-semibold mb-1">Invoice No</label>
 
         <p-inputgroup>
-          <p-inputgroup-addon class="w-full">{{
-            selectedCompany?.invoicePrefix ?? 'Invoice -'
-          }}</p-inputgroup-addon>
+          <p-inputgroup-addon class="w-full" *ngIf="selectedCompany">
+            {{ selectedCompany.invoicePrefix }}
+          </p-inputgroup-addon>
+          <p-inputgroup-addon class="w-full" *ngIf="!selectedCompany">
+            Invoice -
+          </p-inputgroup-addon>
+
           <p-floatlabel class="w-1/2">
             <input pInputText [(ngModel)]="invoiceSuffix" placeholder="Invoice No" class="w-full" />
           </p-floatlabel>
@@ -98,7 +102,15 @@
 
   <!-- 4. Invoice Items -->
   <p-card header="Invoice Items" class="rounded-2xl shadow-lg">
-    <div class="flex justify-end">
+    <div class="flex justify-end gap-5">
+      <button
+        pButton
+        label="Preview Invoice"
+        icon="pi pi-eye"
+        class="mb-4 text-end w-full md:w-auto"
+        (click)="openPreview()"
+      ></button>
+
       <button
         pButton
         label="Add Item"
@@ -315,7 +327,7 @@
       pButton
       label="Download PDF"
       icon="pi pi-download"
-      class="p-button-secondary"
+      class="fill-indigo-800"
       (click)="downloadPDFInvoice()"
     ></button>
 
@@ -328,3 +340,13 @@
     ></button>
   </div>
 </div>
+
+<p-dialog
+  header="Invoice Preview"
+  [(visible)]="display"
+  [modal]="true"
+  [style]="{ width: '70vw', height: '80vh' }"
+  [dismissableMask]="true"
+>
+  <div class="invoice-content" [innerHTML]="invoiceHtml"></div>
+</p-dialog>

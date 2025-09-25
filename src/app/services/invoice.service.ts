@@ -36,4 +36,8 @@ export class InvoiceService {
   downloadPDFInvoice(id: string): Observable<any> {
     return this.http.getDownloadFileAPI(`${this.baseUrl}/${id}/pdf`);
   }
+
+  previewInvoice(previewData: any): Observable<any> {
+    return this.http.postAPI(`${this.baseUrl}/preview`, previewData);
+  }
 }

@@ -1,6 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { decrypt } from '../../../helper/encryptionHelper';
 import { amountToWords } from '../../../helper/numbersToWords';
 import { SharedModule } from '../../../modules/shared.module';
 import { InvoiceService } from '../../../services/invoice.service';
@@ -12,6 +14,8 @@ import { CompanyService } from './../../../services/company.service';
   imports: [SharedModule],
   templateUrl: './create-invoice.html',
   styleUrl: './create-invoice.scss',
+  // changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class CreateInvoice implements OnInit {
   companyService: CompanyService = inject(CompanyService);
@@ -19,10 +23,14 @@ export class CreateInvoice implements OnInit {
   invoiceService: InvoiceService = inject(InvoiceService);
   messageService: MessageService = inject(MessageService);
   route: ActivatedRoute = inject(ActivatedRoute);
+  sanitizer: DomSanitizer = inject(DomSanitizer);
+  cd: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   invoiceId?: string;
 
   invoiceSuffix: string = '';
+  display: boolean = false;
+  invoiceHtml: SafeHtml = '';
 
   ngOnInit(): void {
     this.getCompanies();
@@ -48,6 +56,7 @@ export class CreateInvoice implements OnInit {
         this.invoice.invoiceDate = new Date(invoice.invoiceDate);
         this.invoiceItems = invoice.items;
         this.recalculate();
+        Promise.resolve().then(() => this.cd.detectChanges());
       },
       error: (err) => {
         console.error('Error loading invoice:', err);
@@ -89,6 +98,7 @@ export class CreateInvoice implements OnInit {
     this.companyService.getCompanies().subscribe({
       next: (data) => {
         this.companies = [...data];
+        this.cd.detectChanges();
       },
       error: (error) => {
         console.error(error);
@@ -100,6 +110,7 @@ export class CreateInvoice implements OnInit {
     this.clientService.getClients().subscribe({
       next: (data) => {
         this.clients = data;
+        this.cd.detectChanges();
       },
       error: (error) => {
         console.error(error);
@@ -187,11 +198,13 @@ export class CreateInvoice implements OnInit {
     this.invoice.cgstRate = company?.cgstRate ?? 6;
     this.invoice.sgstRate = company?.sgstRate ?? 6;
     this.recalculate();
+    this.cd.detectChanges();
   }
 
   onClientChange(client: any) {
     this.selectedClient = client;
     this.invoice.client = client;
+    this.cd.detectChanges();
   }
 
   convertToWords(amount: number): string {
@@ -300,6 +313,27 @@ export class CreateInvoice implements OnInit {
       },
       error: (error) => {
         console.error('Error downloading PDF:', error);
+      },
+    });
+  }
+
+  openPreview() {
+    this.display = true;
+
+    const previewData = {
+      company: this.selectedCompany?._id,
+      client: this.selectedClient?._id,
+      items: this.invoiceItems,
+    };
+
+    this.invoiceService.previewInvoice(previewData).subscribe({
+      next: (data) => {
+        const invoiceHtml = decrypt(data?.html);
+        this.invoiceHtml = this.sanitizer.bypassSecurityTrustHtml(invoiceHtml);
+        this.cd.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error generating preview:', error);
       },
     });
   }
