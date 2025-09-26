@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { decrypt } from '../../../helper/encryptionHelper';
@@ -29,7 +29,9 @@ export class CreateInvoice implements OnInit {
   invoiceId?: string;
 
   invoiceSuffix: string = '';
-  display: boolean = false;
+  displayHtml: boolean = false;
+  displayPdf: boolean = false;
+  pdfSrc: SafeResourceUrl | null = null;
   invoiceHtml: SafeHtml = '';
 
   ngOnInit(): void {
@@ -55,6 +57,10 @@ export class CreateInvoice implements OnInit {
         this.invoice = invoice;
         this.invoice.invoiceDate = new Date(invoice.invoiceDate);
         this.invoiceItems = invoice.items;
+        this.invoiceSuffix = invoice.invoiceNumber?.replace(
+          this.selectedCompany?.invoicePrefix ?? 'Invoice -',
+          '',
+        );
         this.recalculate();
         Promise.resolve().then(() => this.cd.detectChanges());
       },
@@ -94,6 +100,36 @@ export class CreateInvoice implements OnInit {
   editingIndex: number | null = null;
   submitted = false;
 
+  particularsList: string[] = ['Item A', 'Item B', 'Item C', 'New'];
+  vehiclesList: string[] = ['MH12AB1234', 'MH14CD5678', 'MH20EF9012'];
+  filteredParticulars: string[] = [];
+  filteredVehicles: string[] = [];
+
+  // Filter suggestions dynamically
+  filterVehicles(event: any) {
+    const query = event.query.toLowerCase();
+    this.filteredVehicles = this.vehiclesList.filter((v) => v.toLowerCase().includes(query));
+  }
+
+  // Add new vehicle number if it doesn't exist
+  addNewVehicle(value: string) {
+    if (value && !this.vehiclesList.includes(value)) {
+      this.vehiclesList.push(value);
+    }
+  }
+
+  // Filter methods for autocomplete
+  filterParticulars(event: any) {
+    const query = event.query.toLowerCase();
+    this.filteredParticulars = this.particularsList.filter((p) => p.toLowerCase().includes(query));
+  }
+
+  addNewParticular(value: string) {
+    if (value && !this.particularsList.includes(value)) {
+      this.particularsList.push(value);
+    }
+  }
+
   getCompanies() {
     this.companyService.getCompanies().subscribe({
       next: (data) => {
@@ -123,8 +159,13 @@ export class CreateInvoice implements OnInit {
   }
 
   addItem() {
+    // Find the latest date from all existing items
+    const latestDate = this.invoiceItems.length
+      ? new Date(Math.max(...this.invoiceItems.map((item) => new Date(item.date).getTime())))
+      : null;
+
     const newItem = {
-      date: null,
+      date: latestDate, // use the latest date
       particulars: '',
       vehicleNo: '',
       quantity: 1, // default quantity
@@ -318,7 +359,11 @@ export class CreateInvoice implements OnInit {
   }
 
   openPreview() {
-    this.display = true;
+    this.displayHtml = true;
+    this.displayPdf = false;
+    this.invoiceHtml = '';
+    this.pdfSrc = null;
+    this.cd.detectChanges();
 
     const previewData = {
       company: this.selectedCompany?._id,
@@ -336,5 +381,39 @@ export class CreateInvoice implements OnInit {
         console.error('Error generating preview:', error);
       },
     });
+  }
+
+  previewPdf(): void {
+    if (!this.invoiceId) return;
+    this.displayPdf = true;
+    this.displayHtml = false;
+    this.invoiceHtml = '';
+    this.pdfSrc = null;
+    this.cd.detectChanges();
+
+    this.invoiceService.downloadPDFInvoice(`${this.invoiceId}`).subscribe({
+      next: (blob: Blob) => {
+        if (!blob || blob.size === 0) {
+          console.error('Empty PDF response');
+          return;
+        }
+
+        const url = URL.createObjectURL(blob);
+        this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        this.cd.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error downloading PDF:', error);
+      },
+    });
+  }
+
+  changeDate(item: any, days: number): void {
+    if (!item.date) {
+      item.date = new Date(); // fallback to today if empty
+    }
+    const newDate = new Date(item.date);
+    newDate.setDate(newDate.getDate() + days);
+    item.date = newDate;
   }
 }

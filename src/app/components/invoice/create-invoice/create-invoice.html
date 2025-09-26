@@ -103,12 +103,21 @@
   <!-- 4. Invoice Items -->
   <p-card header="Invoice Items" class="rounded-2xl shadow-lg">
     <div class="flex justify-end gap-5">
+      <!-- Show only on desktop -->
       <button
         pButton
         label="Preview Invoice"
         icon="pi pi-eye"
-        class="mb-4 text-end w-full md:w-auto"
+        class="mb-4 text-end w-full md:w-auto hidden md:block"
         (click)="openPreview()"
+      ></button>
+
+      <button
+        pButton
+        label="Preview PDF"
+        icon="pi pi-eye"
+        class="mb-4 text-end w-full md:w-auto block md:hidden"
+        (click)="previewPdf()"
       ></button>
 
       <button
@@ -138,16 +147,36 @@
         <!-- {{ item | json }} -->
         <tr>
           <!-- Date -->
-          <td data-label="Date" class="w-28">
+          <td data-label="Date">
             <ng-container *ngIf="editingIndex === ri; else dateView">
-              <p-datepicker
-                [(ngModel)]="item.date"
-                dateFormat="dd/mm/yy"
-                class="w-full"
-                appendTo="body"
-                placeholder="Select Date"
-                [ngClass]="{ 'border-red-500': !item.date && submitted }"
-              ></p-datepicker>
+              <div class="flex w-full gap-3 items-center justify-between align-baseline flex-row">
+                <p-datepicker
+                  [(ngModel)]="item.date"
+                  dateFormat="dd/mm/yy"
+                  class="w-full"
+                  appendTo="body"
+                  placeholder="Select Date"
+                  [ngClass]="{ 'border-red-500': !item.date && submitted }"
+                ></p-datepicker>
+
+                <!-- Up/Down Icons -->
+                <div class="flex flex-col items-center">
+                  <button
+                    type="button"
+                    (click)="changeDate(item, 1)"
+                    class="text-gray-600 hover:text-black"
+                  >
+                    <i class="pi pi-chevron-up"></i>
+                  </button>
+                  <button
+                    type="button"
+                    (click)="changeDate(item, -1)"
+                    class="text-gray-600 hover:text-black"
+                  >
+                    <i class="pi pi-chevron-down"></i>
+                  </button>
+                </div>
+              </div>
             </ng-container>
             <ng-template #dateView>
               <span class="block font-semibold mb-1 md:hidden">Date:</span>
@@ -158,13 +187,16 @@
           <!-- Particulars -->
           <td data-label="Particulars">
             <ng-container *ngIf="editingIndex === ri; else particularsView">
-              <input
-                pInputText
-                placeholder="Particulars"
+              <p-autoComplete
                 [(ngModel)]="item.particulars"
-                [ngClass]="!item.particulars && submitted ? 'border-red-500' : 'border-gray-300'"
+                [suggestions]="filteredParticulars"
+                (completeMethod)="filterParticulars($event)"
+                (onBlur)="addNewParticular(item.particulars)"
+                placeholder="Particulars"
+                [forceSelection]="false"
                 class="w-full"
-              />
+                fluid
+              ></p-autoComplete>
             </ng-container>
             <ng-template #particularsView>
               <span class="block font-semibold mb-1 md:hidden">Particulars:</span>
@@ -175,12 +207,16 @@
           <!-- Vehicle No -->
           <td data-label="Vehicle No">
             <ng-container *ngIf="editingIndex === ri; else vehicleView">
-              <input
-                pInputText
-                placeholder="Vehicle No"
+              <p-autoComplete
                 [(ngModel)]="item.vehicleNo"
-                class="w-full md:w-auto uppercase"
-              />
+                [suggestions]="filteredVehicles"
+                (completeMethod)="filterVehicles($event)"
+                (onBlur)="addNewVehicle(item.vehicleNo)"
+                placeholder="Vehicle No"
+                [forceSelection]="false"
+                class="w-full uppercase"
+                fluid
+              ></p-autoComplete>
             </ng-container>
             <ng-template #vehicleView>
               <span class="block font-semibold mb-1 md:hidden">Vehicle No:</span>
@@ -213,6 +249,7 @@
                 pInputText
                 [(ngModel)]="item.rate"
                 (input)="recalculate()"
+                (keydown.enter)="saveItem(ri)"
                 class="w-full md:w-24"
               />
             </ng-container>
@@ -239,6 +276,7 @@
                   icon="pi pi-check"
                   class="flex-1 md:flex-none w-full md:w-auto p-button-success p-button-sm flex justify-center items-center gap-2"
                   (click)="saveItem(ri)"
+                  (keydown.enter)="saveItem(ri)"
                 ></button>
 
                 <button
@@ -343,10 +381,21 @@
 
 <p-dialog
   header="Invoice Preview"
-  [(visible)]="display"
+  [(visible)]="displayHtml"
   [modal]="true"
-  [style]="{ width: '70vw', height: '80vh' }"
+  styleClass="w-[70vw] h-[80vh] md:w-[70vw] md:h-[80vh] w-[90vw] h-[90vh]"
   [dismissableMask]="true"
 >
   <div class="invoice-content" [innerHTML]="invoiceHtml"></div>
+</p-dialog>
+
+<p-dialog
+  header="Invoice PDF Preview"
+  [(visible)]="displayPdf"
+  [modal]="true"
+  styleClass="w-[70vw] h-[80vh] md:w-[70vw] md:h-[80vh] w-[90vw] h-[90vh]"
+  [dismissableMask]="true"
+  [contentStyle]="{ padding: '0', height: '100%' }"
+>
+  <iframe *ngIf="pdfSrc" [src]="pdfSrc" width="100%" height="100%" style="border: none"></iframe>
 </p-dialog>
