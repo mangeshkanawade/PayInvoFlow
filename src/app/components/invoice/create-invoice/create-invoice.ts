@@ -3,6 +3,7 @@ import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-brows
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { decrypt } from '../../../helper/encryptionHelper';
+import { generateInvoiceFilePDFName } from '../../../helper/generateInvoiceFilePDFName';
 import { amountToWords } from '../../../helper/numbersToWords';
 import { SharedModule } from '../../../modules/shared.module';
 import { InvoiceService } from '../../../services/invoice.service';
@@ -57,6 +58,8 @@ export class CreateInvoice implements OnInit {
         this.invoice = invoice;
         this.invoice.invoiceDate = new Date(invoice.invoiceDate);
         this.invoiceItems = invoice.items;
+        this.invoiceItems.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
         this.invoiceSuffix = invoice.invoiceNumber?.replace(
           this.selectedCompany?.invoicePrefix ?? 'Invoice -',
           '',
@@ -183,12 +186,15 @@ export class CreateInvoice implements OnInit {
   editItem(index: number) {
     this.editingIndex = index;
     this.submitted = false; // reset submitted when editing
+    this.invoiceItems.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }
 
   saveItem(index: number) {
     this.submitted = true;
 
     const item = this.invoiceItems[index];
+
+    this.invoiceItems.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
     if (!item.date || !item.particulars) {
       return; // stop saving if validation fails
@@ -204,6 +210,8 @@ export class CreateInvoice implements OnInit {
 
   removeItem(index: number) {
     this.invoiceItems.splice(index, 1);
+    this.invoiceItems.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
     this.recalculate();
   }
 
@@ -348,7 +356,11 @@ export class CreateInvoice implements OnInit {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `Invoice_${this.invoiceId}.pdf`;
+        a.download = generateInvoiceFilePDFName(
+          this.selectedCompany?.name,
+          this.selectedClient?.name,
+          this.invoice.invoiceDate,
+        );
         a.click();
         window.URL.revokeObjectURL(url);
       },
