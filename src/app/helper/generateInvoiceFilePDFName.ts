@@ -30,6 +30,9 @@ export function generateInvoiceFilePDFName(
   ];
   const monthYear = `${monthNames[dateObj.getMonth()]}${dateObj.getFullYear()}`;
 
+  console.log(companyName);
+  console.log(clientName);
+
   // Helper: take first meaningful word and sanitize
   const sanitize = (str: string): string => {
     if (!str) return '';

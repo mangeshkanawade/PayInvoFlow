@@ -40,4 +40,8 @@ export class InvoiceService {
   previewInvoice(previewData: any): Observable<any> {
     return this.http.postAPI(`${this.baseUrl}/preview`, previewData);
   }
+
+  searchInvoices(filters?: any): Observable<any[]> {
+    return this.http.postAPI(`${this.baseUrl}/search`, filters || {});
+  }
 }

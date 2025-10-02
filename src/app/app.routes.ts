@@ -4,6 +4,7 @@ import { SearchClient } from './components/client/search-client/search-client';
 import { CreateCompany } from './components/company/create-company/create-company';
 import { SearchCompany } from './components/company/search-company/search-company';
 import { CreateInvoice } from './components/invoice/create-invoice/create-invoice';
+import { SearchInvoice } from './components/invoice/search-invoice/search-invoice';
 import { NotFound } from './components/notfound/not-found';
 
 export const routes: Routes = [
@@ -78,7 +79,7 @@ export const routes: Routes = [
       },
       {
         path: 'search',
-        component: SearchCompany,
+        component: SearchInvoice,
         title: 'Invoice',
       },
       {
