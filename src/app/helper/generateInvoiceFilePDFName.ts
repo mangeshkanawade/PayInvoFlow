@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 /**
  * Generate invoice PDF filename: Company - Client - MonYYYY.pdf
  * Example: "Ansh - Frankline - Sep2025.pdf"
@@ -12,40 +14,26 @@ export function generateInvoiceFilePDFName(
   clientName: string,
   invoiceDate: Date | string,
 ): string {
-  const dateObj = typeof invoiceDate === 'string' ? new Date(invoiceDate) : invoiceDate;
+  // Define accepted date formats
+  const formats = ['DD-MM-YYYY', 'DD/MM/YYYY', 'YYYY-MM-DD', 'YYYY/MM/DD', moment.ISO_8601];
 
-  const monthNames = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-  const monthYear = `${monthNames[dateObj.getMonth()]}${dateObj.getFullYear()}`;
+  // Parse with moment
+  let dateMoment = moment(invoiceDate, formats, true);
+  if (!dateMoment.isValid()) {
+    dateMoment = moment(); // fallback to current date
+  }
 
-  console.log(companyName);
-  console.log(clientName);
+  const monthYear = dateMoment.format('MMMYYYY'); // e.g., Sep2025
 
   // Helper: take first meaningful word and sanitize
   const sanitize = (str: string): string => {
     if (!str) return '';
-    const ignoreWords = ['the', 'a', 'an', 'and']; // words to skip if first
-    const words = str.trim().split(/\s+/); // split by any whitespace
+    const ignoreWords = ['the', 'a', 'an', 'and'];
+    const words = str.trim().split(/\s+/);
     let firstWord = words[0];
-
-    // If first word is generic, use the next one
     if (ignoreWords.includes(firstWord.toLowerCase()) && words.length > 1) {
       firstWord = words[1];
     }
-
-    // Remove non-alphanumeric characters
     return firstWord.replace(/[^a-zA-Z0-9]/g, '');
   };
 
